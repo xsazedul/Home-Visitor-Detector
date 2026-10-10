@@ -99,7 +99,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <div>
           <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
             <label className="font-medium">Person Confidence</label>
-            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+            <span className={`font-mono font-bold ${isLight ? "text-neutral-900" : "text-white"}`}>
               {Math.round((config.personConfidence ?? 0.30) * 100)}%
             </span>
           </div>
@@ -110,9 +110,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={0.02}
             value={config.personConfidence ?? 0.30}
             onChange={(e) => onUpdateConfig({ personConfidence: Number(e.target.value) })}
-            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1.5 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
-          <div className="flex justify-between text-[10px] text-neutral-400 font-mono mt-1">
+          <div className={`flex justify-between text-[10px] font-mono mt-1 ${isLight ? "text-neutral-500" : "text-neutral-400"}`}>
             <span>20% (Fast Walkers)</span>
             <span>30% (Standard)</span>
             <span>70% (Strict)</span>
@@ -147,7 +147,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <div>
           <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
             <label className="font-medium">Capture Cooldown</label>
-            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+            <span className={`font-mono font-bold ${isLight ? "text-neutral-900" : "text-white"}`}>
               {config.cooldownSeconds}s
             </span>
           </div>
@@ -158,7 +158,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={1}
             value={config.cooldownSeconds}
             onChange={(e) => onUpdateConfig({ cooldownSeconds: Number(e.target.value) })}
-            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1.5 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
         </div>
 
@@ -166,7 +166,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <div>
           <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
             <label className="font-medium">Re-entry Absence Window</label>
-            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+            <span className={`font-mono font-bold ${isLight ? "text-neutral-900" : "text-white"}`}>
               {config.absenceTimeoutSeconds ?? 2}s
             </span>
           </div>
@@ -177,9 +177,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={0.5}
             value={config.absenceTimeoutSeconds ?? 2}
             onChange={(e) => onUpdateConfig({ absenceTimeoutSeconds: Number(e.target.value) })}
-            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1.5 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
-          <p className="text-[10px] text-neutral-400 mt-1 leading-normal">
+          <p className={`text-[10px] mt-1 leading-normal ${isLight ? "text-neutral-500" : "text-neutral-400"}`}>
             Period subject must stay out of view before re-entering triggers a new visitor event.
           </p>
         </div>
@@ -262,7 +262,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <div>
           <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
             <label className="font-medium">Chime Volume</label>
-            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+            <span className={`font-mono font-bold ${isLight ? "text-neutral-900" : "text-white"}`}>
               {Math.round(config.alertVolume * 100)}%
             </span>
           </div>
@@ -273,7 +273,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={0.05}
             value={config.alertVolume}
             onChange={(e) => onUpdateConfig({ alertVolume: Number(e.target.value) })}
-            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1.5 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
         </div>
 

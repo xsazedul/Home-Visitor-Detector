@@ -65,6 +65,21 @@ export default function VisitorDetectorPage() {
     setConfig((prev) => ({ ...prev, theme }));
   }, []);
 
+  // Synchronize active theme with document element
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const root = document.documentElement;
+      root.classList.remove("dark", "midnight", "light");
+      if (config.theme === "dark") {
+        root.classList.add("dark");
+      } else if (config.theme === "midnight") {
+        root.classList.add("dark", "midnight");
+      } else {
+        root.classList.add("light");
+      }
+    }
+  }, [config.theme]);
+
   // History & Tracking
   const [events, setEvents] = useState<DetectionEvent[]>([]);
   const sequenceCounterRef = useRef(1);
