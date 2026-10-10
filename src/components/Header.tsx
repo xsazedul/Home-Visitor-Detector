@@ -4,13 +4,15 @@ import React from "react";
 import {
   Volume2,
   VolumeX,
-  Eye,
-  Activity,
-  UserCheck,
+  ShieldCheck,
+  ShieldAlert,
+  Shield,
   Sun,
   Moon,
   Sparkles,
+  Layers,
   Box,
+  Video,
 } from "lucide-react";
 import { CameraStatus, DetectionStatus, ThemeMode } from "@/types";
 
@@ -34,181 +36,192 @@ export const Header: React.FC<HeaderProps> = ({
   isMonitoring,
   alertSoundEnabled,
   onToggleSound,
-  eventCount,
-  lastEventTime,
   theme,
   onSelectTheme,
   is3DMode,
   onToggle3DMode,
 }) => {
   const isLight = theme === "light";
-  const isHolo = theme === "hologram";
+  const isDark = theme === "dark";
+  const isMidnight = theme === "midnight";
 
-  const headerBgClass = isLight
-    ? "border-b border-slate-200 bg-white/90 text-slate-800"
-    : isHolo
-    ? "border-b border-fuchsia-900/40 bg-[#090314]/90 text-slate-100"
-    : "border-b border-slate-800 bg-slate-950/85 text-slate-100";
+  const headerContainerClass = isLight
+    ? "border-b border-neutral-200/80 bg-white/80 text-neutral-900"
+    : isMidnight
+    ? "border-b border-neutral-800/80 bg-[#090b10]/85 text-neutral-100"
+    : "border-b border-neutral-800/80 bg-neutral-950/85 text-neutral-100";
 
   return (
-    <header className={`sticky top-0 z-40 w-full backdrop-blur-xl transition-colors duration-300 ${headerBgClass}`}>
+    <header className={`sticky top-0 z-40 w-full backdrop-blur-md transition-colors duration-200 ${headerContainerClass}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        {/* Brand Logo & Title */}
+        {/* Brand identity */}
         <div className="flex items-center space-x-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-cyan-500/20">
-            <div className={`flex h-full w-full items-center justify-center rounded-[10px] ${isLight ? "bg-white" : "bg-slate-950"}`}>
-              <Eye className="h-5 w-5 text-cyan-500 animate-pulse" />
-            </div>
+          <div
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all ${
+              isLight
+                ? "border-neutral-200 bg-neutral-100 text-neutral-800 shadow-sm"
+                : "border-neutral-700/60 bg-neutral-900 text-neutral-200 shadow-inner"
+            }`}
+          >
+            <Video className="h-4 w-4" />
           </div>
 
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className={`text-lg font-bold tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}>
-                AI Visitor <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">Detector</span>
-              </h1>
-              <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-mono font-bold text-cyan-600 dark:text-cyan-400">
-                {is3DMode ? "3D DEPTH" : "ACTIVE VISION"}
+              <span className="font-semibold tracking-tight text-sm sm:text-base">
+                Vision Guard
+              </span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase ${
+                  isLight
+                    ? "bg-neutral-100 text-neutral-600 border border-neutral-200"
+                    : "bg-neutral-800/70 text-neutral-300 border border-neutral-700/60"
+                }`}
+              >
+                Edge AI
               </span>
             </div>
-            <p className={`hidden text-[11px] sm:block ${isLight ? "text-slate-500" : "text-slate-400"}`}>
-              Webcam Movement &amp; Person Detection System
+            <p className="hidden text-[11px] text-neutral-500 sm:block -mt-0.5">
+              Intelligent Home &amp; Office Visitor Monitor
             </p>
           </div>
         </div>
 
-        {/* Live Status Indicators & Controls */}
+        {/* System telemetry & Controls */}
         <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Camera Status Badge */}
+          {/* Camera hardware status */}
           <div
-            className={`hidden sm:flex items-center space-x-1.5 rounded-full border px-3 py-1 text-xs ${
+            className={`hidden sm:flex items-center space-x-2 rounded-full border px-2.5 py-1 text-xs ${
               isLight
-                ? "border-slate-200 bg-slate-100 text-slate-700"
-                : "border-slate-800 bg-slate-900/90 text-slate-300"
+                ? "border-neutral-200 bg-neutral-50 text-neutral-600"
+                : "border-neutral-800 bg-neutral-900/60 text-neutral-400"
             }`}
           >
             <span
-              className={`h-2 w-2 rounded-full ${
+              className={`h-1.5 w-1.5 rounded-full ${
                 cameraStatus === "active"
-                  ? "bg-emerald-400 animate-ping"
+                  ? "bg-emerald-500 ring-2 ring-emerald-500/20"
                   : cameraStatus === "initializing"
-                  ? "bg-amber-400 animate-pulse"
-                  : "bg-slate-400"
+                  ? "bg-amber-400 ring-2 ring-amber-400/20"
+                  : "bg-neutral-400"
               }`}
             />
-            <span className="font-medium">
-              {cameraStatus === "active" ? "Camera Active" : cameraStatus === "initializing" ? "Starting..." : "Inactive"}
+            <span className="font-medium text-[11px]">
+              {cameraStatus === "active" ? "Camera Active" : cameraStatus === "initializing" ? "Connecting..." : "Camera Inactive"}
             </span>
           </div>
 
-          {/* Monitoring Status Badge */}
-          {isMonitoring && (
-            <div
-              className={`flex items-center space-x-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
-                detectionStatus === "person_detected"
-                  ? "border-rose-500 bg-rose-500/20 text-rose-500 animate-pulse"
-                  : detectionStatus === "movement"
-                  ? "border-amber-500 bg-amber-500/20 text-amber-500"
-                  : "border-emerald-500/50 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-              }`}
-            >
-              {detectionStatus === "person_detected" ? (
-                <>
-                  <UserCheck className="h-3.5 w-3.5" />
-                  <span>Person Detected</span>
-                </>
-              ) : detectionStatus === "movement" ? (
-                <>
-                  <Activity className="h-3.5 w-3.5" />
-                  <span>Movement</span>
-                </>
-              ) : (
-                <>
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                  </span>
-                  <span>Monitoring</span>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* 3D Mode Switcher Button */}
-          <button
-            onClick={onToggle3DMode}
-            title={is3DMode ? "Switch to 2D view" : "Convert to 3D volumetric view"}
-            className={`flex items-center space-x-1 rounded-xl px-2.5 py-1.5 text-xs font-bold transition-all border ${
-              is3DMode
-                ? "border-cyan-500 bg-cyan-600 text-white shadow-sm shadow-cyan-500/30"
+          {/* Guard Monitoring State */}
+          <div
+            className={`flex items-center space-x-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+              !isMonitoring
+                ? isLight
+                  ? "border-neutral-200 bg-neutral-100/80 text-neutral-500"
+                  : "border-neutral-800 bg-neutral-900 text-neutral-400"
+                : detectionStatus === "person_detected"
+                ? "border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                : detectionStatus === "movement"
+                ? "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400"
                 : isLight
-                ? "border-slate-200 bg-slate-100 text-slate-600 hover:text-slate-900"
-                : "border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
+                ? "border-emerald-500/30 bg-emerald-50 text-emerald-700"
+                : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
             }`}
           >
-            <Box className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{is3DMode ? "3D Active" : "Convert 3D"}</span>
+            {isMonitoring ? (
+              <>
+                <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" />
+                <span className="text-[11px]">
+                  {detectionStatus === "person_detected"
+                    ? "Person Detected"
+                    : detectionStatus === "movement"
+                    ? "Motion Active"
+                    : "Guard Armed"}
+                </span>
+              </>
+            ) : (
+              <>
+                <Shield className="h-3 w-3 text-neutral-400" />
+                <span className="text-[11px]">Standby</span>
+              </>
+            )}
+          </div>
+
+          {/* Spatial 3D Toggle */}
+          <button
+            onClick={onToggle3DMode}
+            title={is3DMode ? "Switch to 2D standard view" : "Enable 3D spatial depth projection"}
+            className={`flex items-center space-x-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all ${
+              is3DMode
+                ? isLight
+                  ? "border-indigo-300 bg-indigo-50 text-indigo-700 shadow-xs"
+                  : "border-indigo-500/40 bg-indigo-500/15 text-indigo-300"
+                : isLight
+                ? "border-neutral-200 bg-neutral-50 text-neutral-600 hover:text-neutral-900"
+                : "border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-neutral-200"
+            }`}
+          >
+            <Box className="h-3 w-3" />
+            <span className="hidden sm:inline">3D Spatial</span>
           </button>
 
-          {/* Theme Selector (Light / Dark / Hologram) */}
+          {/* Theme switcher pill */}
           <div
-            className={`flex items-center rounded-xl p-0.5 border ${
+            className={`flex items-center rounded-full border p-0.5 ${
               isLight
-                ? "border-slate-200 bg-slate-100"
-                : isHolo
-                ? "border-fuchsia-900/50 bg-[#16072d]"
-                : "border-slate-800 bg-slate-900"
+                ? "border-neutral-200 bg-neutral-100"
+                : "border-neutral-800 bg-neutral-900"
             }`}
           >
             <button
               onClick={() => onSelectTheme("light")}
-              title="Ultra Light Theme"
-              className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
-                theme === "light"
-                  ? "bg-white text-amber-500 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
+              title="Light studio theme"
+              className={`flex h-6 w-6 items-center justify-center rounded-full transition-all ${
+                isLight
+                  ? "bg-white text-neutral-900 shadow-xs font-semibold"
+                  : "text-neutral-400 hover:text-neutral-200"
               }`}
             >
-              <Sun className="h-3.5 w-3.5" />
+              <Sun className="h-3 w-3" />
             </button>
-
             <button
               onClick={() => onSelectTheme("dark")}
-              title="Cyber Dark Theme"
-              className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
-                theme === "dark"
-                  ? "bg-slate-800 text-cyan-400 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
+              title="Dark theme"
+              className={`flex h-6 w-6 items-center justify-center rounded-full transition-all ${
+                isDark
+                  ? "bg-neutral-800 text-neutral-100 shadow-xs font-semibold"
+                  : "text-neutral-400 hover:text-neutral-200"
               }`}
             >
-              <Moon className="h-3.5 w-3.5" />
+              <Moon className="h-3 w-3" />
             </button>
-
             <button
-              onClick={() => onSelectTheme("hologram")}
-              title="Hologram Neon 3D Theme"
-              className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
-                theme === "hologram"
-                  ? "bg-fuchsia-600 text-white shadow-sm shadow-fuchsia-600/30"
-                  : "text-slate-400 hover:text-slate-200"
+              onClick={() => onSelectTheme("midnight")}
+              title="Midnight cobalt theme"
+              className={`flex h-6 w-6 items-center justify-center rounded-full transition-all ${
+                isMidnight
+                  ? "bg-indigo-600 text-white shadow-xs font-semibold"
+                  : "text-neutral-400 hover:text-neutral-200"
               }`}
             >
-              <Sparkles className="h-3.5 w-3.5" />
+              <Sparkles className="h-3 w-3" />
             </button>
           </div>
 
-          {/* Sound Toggle */}
+          {/* Sound mute button */}
           <button
             onClick={onToggleSound}
-            title={alertSoundEnabled ? "Mute alert audio" : "Enable alert audio"}
-            className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-colors ${
+            title={alertSoundEnabled ? "Mute audio alarms" : "Unmute audio alarms"}
+            className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
               alertSoundEnabled
-                ? "border-cyan-500/40 bg-cyan-500/10 text-cyan-500"
+                ? isLight
+                  ? "border-neutral-300 bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                  : "border-neutral-700 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
                 : isLight
-                ? "border-slate-200 bg-slate-100 text-slate-400"
-                : "border-slate-800 bg-slate-900 text-slate-500 hover:text-slate-300"
+                ? "border-neutral-200 bg-transparent text-neutral-400 hover:text-neutral-600"
+                : "border-neutral-800 bg-transparent text-neutral-500 hover:text-neutral-300"
             }`}
           >
-            {alertSoundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+            {alertSoundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
           </button>
         </div>
       </div>

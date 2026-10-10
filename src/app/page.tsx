@@ -337,19 +337,19 @@ export default function VisitorDetectorPage() {
   const lastEvent = events[0] || null;
 
   const isLight = config.theme === "light";
-  const isHolo = config.theme === "hologram";
+  const isMidnight = config.theme === "midnight";
 
   const rootBgClass = isLight
-    ? "bg-slate-100 text-slate-900 selection:bg-cyan-500/20 selection:text-cyan-900"
-    : isHolo
-    ? "bg-[#070114] text-slate-100 selection:bg-fuchsia-500/30 selection:text-fuchsia-300"
-    : "bg-slate-950 text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-300";
+    ? "bg-[#fafafa] text-neutral-900 selection:bg-neutral-900 selection:text-white"
+    : isMidnight
+    ? "bg-[#080a10] text-neutral-100 selection:bg-indigo-500/30 selection:text-indigo-200"
+    : "bg-[#0e0e11] text-neutral-100 selection:bg-neutral-700 selection:text-white";
 
   const footerClass = isLight
-    ? "border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-500"
-    : isHolo
-    ? "border-t border-fuchsia-950 bg-[#070114] py-5 text-center text-xs text-slate-500"
-    : "border-t border-slate-900 bg-slate-950 py-5 text-center text-xs text-slate-500";
+    ? "border-t border-neutral-200/80 bg-white py-5 text-center text-xs text-neutral-500"
+    : isMidnight
+    ? "border-t border-neutral-800/80 bg-[#080a10] py-5 text-center text-xs text-neutral-500"
+    : "border-t border-neutral-800/80 bg-[#0e0e11] py-5 text-center text-xs text-neutral-500";
 
   return (
     <div className={`flex min-h-screen flex-col transition-colors duration-300 ${rootBgClass}`}>

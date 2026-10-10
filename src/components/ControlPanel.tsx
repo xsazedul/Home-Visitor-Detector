@@ -7,12 +7,10 @@ import {
   VolumeX,
   Clock,
   Camera,
-  Zap,
-  Box,
-  Sun,
-  Moon,
+  Play,
+  Shield,
+  Bell,
   Sparkles,
-  Layers,
 } from "lucide-react";
 import { MonitoringConfig, MotionSensitivity, SoundType, ThemeMode } from "@/types";
 
@@ -35,187 +33,108 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   eventCount,
   lastEventTime,
   isMonitoring,
-  onToggle3DMode,
 }) => {
   const isLight = config.theme === "light";
-  const isHolo = config.theme === "hologram";
+  const isMidnight = config.theme === "midnight";
 
-  const containerBg = isLight
-    ? "border-slate-200 bg-white/95 text-slate-900 shadow-xl shadow-slate-200/50"
-    : isHolo
-    ? "border-fuchsia-900/40 bg-[#0d041a]/90 text-slate-100 shadow-2xl shadow-fuchsia-950/40"
-    : "border-slate-800 bg-slate-900/80 text-slate-100 shadow-xl";
+  const panelBg = isLight
+    ? "border border-neutral-200/90 bg-white text-neutral-900 shadow-sm"
+    : isMidnight
+    ? "border border-neutral-800/80 bg-[#0c0f18] text-neutral-100 shadow-lg shadow-black/40"
+    : "border border-neutral-800/80 bg-neutral-900 text-neutral-100 shadow-lg shadow-black/40";
 
-  const subCardBg = isLight
-    ? "border-slate-200 bg-slate-50"
-    : isHolo
-    ? "border-fuchsia-900/30 bg-[#16072d]/70"
-    : "border-slate-800 bg-slate-950/60";
+  const sectionBg = isLight
+    ? "bg-neutral-50/80 border border-neutral-200/80"
+    : isMidnight
+    ? "bg-[#131824]/60 border border-neutral-800/80"
+    : "bg-neutral-950/60 border border-neutral-800/80";
 
   return (
-    <div className={`flex flex-col space-y-4 rounded-3xl border p-5 backdrop-blur-xl transition-colors duration-300 ${containerBg}`}>
+    <div className={`flex flex-col space-y-4 rounded-2xl p-4 sm:p-5 transition-colors duration-200 ${panelBg}`}>
       {/* Telemetry Summary Cards */}
       <div className="grid grid-cols-2 gap-3">
-        <div className={`rounded-2xl border p-3.5 ${subCardBg}`}>
-          <div className="flex items-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
-            <Camera className="h-3.5 w-3.5 text-cyan-500" />
-            <span>Captured Visitors</span>
+        <div className={`rounded-xl p-3.5 transition-colors ${sectionBg}`}>
+          <div className="flex items-center space-x-1.5 text-xs text-neutral-500 font-medium">
+            <Camera className="h-3.5 w-3.5 text-neutral-400" />
+            <span>Captured Events</span>
           </div>
-          <div className={`mt-1 text-2xl font-black font-mono ${isLight ? "text-slate-900" : "text-white"}`}>
+          <div className="mt-1 text-2xl font-bold font-mono tracking-tight">
             {eventCount}
           </div>
         </div>
 
-        <div className={`rounded-2xl border p-3.5 ${subCardBg}`}>
-          <div className="flex items-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
-            <Clock className="h-3.5 w-3.5 text-indigo-500" />
-            <span>Last Detected</span>
+        <div className={`rounded-xl p-3.5 transition-colors ${sectionBg}`}>
+          <div className="flex items-center space-x-1.5 text-xs text-neutral-500 font-medium">
+            <Clock className="h-3.5 w-3.5 text-neutral-400" />
+            <span>Last Activity</span>
           </div>
-          <div className={`mt-1 text-xs font-mono font-bold truncate ${isLight ? "text-slate-800" : "text-slate-200"}`}>
-            {lastEventTime || "No events yet"}
+          <div className="mt-1.5 text-xs font-mono font-medium truncate">
+            {lastEventTime || "No recent activity"}
           </div>
         </div>
       </div>
 
-      {/* Visual Theme Selector Card */}
-      <div className={`rounded-2xl border p-4 space-y-2.5 text-xs ${subCardBg}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 font-bold">
-            <Layers className="h-4 w-4 text-cyan-500" />
-            <span>Visual Theme</span>
-          </div>
-          <span className="text-[10px] font-mono text-cyan-500 uppercase font-bold">
-            {config.theme}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          {/* Light Theme */}
-          <button
-            onClick={() => onUpdateConfig({ theme: "light" })}
-            className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all ${
-              config.theme === "light"
-                ? "border-amber-400 bg-amber-50 text-amber-900 shadow-sm font-bold"
-                : isLight
-                ? "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                : "border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
-            }`}
-          >
-            <Sun className="h-4 w-4 text-amber-500 mb-1" />
-            <span className="text-[11px]">Ultra Light</span>
-          </button>
-
-          {/* Dark Theme */}
-          <button
-            onClick={() => onUpdateConfig({ theme: "dark" })}
-            className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all ${
-              config.theme === "dark"
-                ? "border-cyan-500 bg-cyan-950/60 text-cyan-300 shadow-sm font-bold"
-                : isLight
-                ? "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                : "border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
-            }`}
-          >
-            <Moon className="h-4 w-4 text-cyan-400 mb-1" />
-            <span className="text-[11px]">Cyber Dark</span>
-          </button>
-
-          {/* Hologram Theme */}
-          <button
-            onClick={() => onUpdateConfig({ theme: "hologram" })}
-            className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all ${
-              config.theme === "hologram"
-                ? "border-fuchsia-500 bg-fuchsia-950/60 text-fuchsia-300 shadow-sm font-bold"
-                : isLight
-                ? "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                : "border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
-            }`}
-          >
-            <Sparkles className="h-4 w-4 text-fuchsia-400 mb-1" />
-            <span className="text-[11px]">Hologram 3D</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 3D Mode Card */}
-      <div className={`rounded-2xl border p-4 space-y-2 text-xs ${subCardBg}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 font-bold">
-            <Box className="h-4 w-4 text-fuchsia-500" />
-            <span>3D Volumetric Vision</span>
+      {/* Detection Parameters Card */}
+      <div className={`rounded-xl p-4 space-y-4 text-xs ${sectionBg}`}>
+        <div className="flex items-center justify-between border-b pb-2.5 border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center space-x-2 font-semibold">
+            <Sliders className="h-3.5 w-3.5 text-neutral-500" />
+            <span>Detection Sensitivity</span>
           </div>
 
-          <button
-            onClick={onToggle3DMode}
-            className={`rounded-xl px-3 py-1 font-bold text-xs transition-all ${
-              config.is3DMode
-                ? "bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white shadow-md shadow-fuchsia-600/30"
-                : isLight
-                ? "border border-slate-300 bg-white text-slate-600 hover:bg-slate-100"
-                : "border border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
-            }`}
-          >
-            {config.is3DMode ? "3D Active" : "Enable 3D"}
-          </button>
-        </div>
-        <p className={`text-[11px] leading-relaxed ${isLight ? "text-slate-500" : "text-slate-400"}`}>
-          Renders 3D depth cuboids, holographic floor grid, estimated visitor distances in meters, and corner target reticles.
-        </p>
-      </div>
-
-      {/* Detection Configuration */}
-      <div className={`rounded-2xl border p-4 space-y-3.5 text-xs ${subCardBg}`}>
-        <div className="flex items-center justify-between border-b pb-2.5 border-slate-200 dark:border-slate-800">
-          <div className="flex items-center space-x-2 font-bold">
-            <Sliders className="h-4 w-4 text-cyan-500" />
-            <span>Detection Settings</span>
-          </div>
           <button
             onClick={onSimulateDetection}
-            title="Simulate visitor detection to test alert"
-            className="flex items-center space-x-1 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-semibold text-cyan-600 dark:text-cyan-300 hover:bg-cyan-500/20 transition-colors"
+            title="Simulate visitor detection trigger"
+            className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors border ${
+              isLight
+                ? "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100"
+                : "border-neutral-700 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+            }`}
           >
-            <Zap className="h-3 w-3" />
-            <span>Test Trigger</span>
+            Test Trigger
           </button>
         </div>
 
-        {/* Person Detection Confidence */}
+        {/* Person Confidence Threshold */}
         <div>
-          <div className="flex items-center justify-between">
-            <label className="font-medium">Person Confidence Threshold</label>
-            <span className="font-mono text-rose-500 font-bold">{Math.round((config.personConfidence ?? 0.32) * 100)}%</span>
+          <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
+            <label className="font-medium">Person Confidence</label>
+            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+              {Math.round((config.personConfidence ?? 0.30) * 100)}%
+            </span>
           </div>
           <input
             type="range"
             min={0.20}
             max={0.70}
             step={0.02}
-            value={config.personConfidence ?? 0.32}
+            value={config.personConfidence ?? 0.30}
             onChange={(e) => onUpdateConfig({ personConfidence: Number(e.target.value) })}
-            className="mt-1.5 w-full accent-rose-500 h-1.5 rounded-lg cursor-pointer bg-slate-300 dark:bg-slate-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
-          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+          <div className="flex justify-between text-[10px] text-neutral-400 font-mono mt-1">
             <span>20% (Fast Walkers)</span>
-            <span>32% (Balanced)</span>
+            <span>30% (Standard)</span>
             <span>70% (Strict)</span>
           </div>
         </div>
 
-        {/* Movement Sensitivity */}
+        {/* Movement Sensitivity Segmented Control */}
         <div>
-          <label className="font-medium">Movement Sensitivity</label>
-          <div className="mt-1.5 grid grid-cols-3 gap-2">
+          <label className="font-medium text-neutral-600 dark:text-neutral-400 block mb-1.5">
+            Motion Sensitivity
+          </label>
+          <div className="grid grid-cols-3 gap-1 rounded-lg p-1 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
             {(["low", "medium", "high"] as MotionSensitivity[]).map((level) => (
               <button
                 key={level}
                 onClick={() => onUpdateConfig({ sensitivity: level })}
-                className={`rounded-xl py-1.5 text-xs font-bold uppercase transition-all ${
+                className={`rounded-md py-1 text-[11px] font-medium capitalize transition-all ${
                   config.sensitivity === level
-                    ? "bg-cyan-600 text-white shadow-sm shadow-cyan-600/30"
-                    : isLight
-                    ? "border border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                    : "border border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
+                    ? isLight
+                      ? "bg-neutral-900 text-white shadow-xs font-semibold"
+                      : "bg-neutral-700 text-white shadow-xs font-semibold"
+                    : "text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
                 }`}
               >
                 {level}
@@ -224,11 +143,13 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           </div>
         </div>
 
-        {/* Cooldown Seconds */}
+        {/* Capture Cooldown Slider */}
         <div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
             <label className="font-medium">Capture Cooldown</label>
-            <span className="font-mono text-cyan-500 font-bold">{config.cooldownSeconds}s</span>
+            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+              {config.cooldownSeconds}s
+            </span>
           </div>
           <input
             type="range"
@@ -237,20 +158,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={1}
             value={config.cooldownSeconds}
             onChange={(e) => onUpdateConfig({ cooldownSeconds: Number(e.target.value) })}
-            className="mt-1.5 w-full accent-cyan-500 h-1.5 rounded-lg cursor-pointer bg-slate-300 dark:bg-slate-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
-          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
-            <span>3s (Rapid)</span>
-            <span>10s (Standard)</span>
-            <span>30s (Quiet)</span>
-          </div>
         </div>
 
-        {/* Absence Timeout */}
+        {/* Absence Timeout Slider */}
         <div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
             <label className="font-medium">Re-entry Absence Window</label>
-            <span className="font-mono text-emerald-500 font-bold">{config.absenceTimeoutSeconds ?? 2}s</span>
+            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+              {config.absenceTimeoutSeconds ?? 2}s
+            </span>
           </div>
           <input
             type="range"
@@ -259,80 +177,94 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={0.5}
             value={config.absenceTimeoutSeconds ?? 2}
             onChange={(e) => onUpdateConfig({ absenceTimeoutSeconds: Number(e.target.value) })}
-            className="mt-1.5 w-full accent-emerald-500 h-1.5 rounded-lg cursor-pointer bg-slate-300 dark:bg-slate-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
-          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
-            <span>1s (Instant Reset)</span>
-            <span>2s (Standard)</span>
-            <span>6s (Extended)</span>
-          </div>
+          <p className="text-[10px] text-neutral-400 mt-1 leading-normal">
+            Period subject must stay out of view before re-entering triggers a new visitor event.
+          </p>
         </div>
 
-        {/* Triggers selection */}
-        <div className="pt-1 space-y-2 border-t border-slate-200 dark:border-slate-800">
-          <label className="font-medium block">Detection Triggers</label>
+        {/* Triggers checkbox selection */}
+        <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800">
+          <label className="font-medium text-neutral-600 dark:text-neutral-400 block mb-2">
+            Active Triggers
+          </label>
           <div className="grid grid-cols-2 gap-2">
-            <label className={`flex items-center space-x-2 cursor-pointer p-2 rounded-xl border ${isLight ? "bg-white border-slate-200" : "bg-slate-900 border-slate-800"}`}>
+            <label className={`flex items-center space-x-2 p-2 rounded-lg border cursor-pointer transition-colors ${
+              isLight ? "bg-white border-neutral-200" : "bg-neutral-900 border-neutral-800"
+            }`}>
               <input
                 type="checkbox"
                 checked={config.triggerOnPerson}
                 onChange={(e) => onUpdateConfig({ triggerOnPerson: e.target.checked })}
-                className="rounded border-slate-400 text-cyan-600 focus:ring-cyan-500"
+                className="rounded text-neutral-900 focus:ring-neutral-400 accent-neutral-800"
               />
-              <span className="font-medium">Person Presence</span>
+              <span className="font-medium text-[11px]">Person Detection</span>
             </label>
 
-            <label className={`flex items-center space-x-2 cursor-pointer p-2 rounded-xl border ${isLight ? "bg-white border-slate-200" : "bg-slate-900 border-slate-800"}`}>
+            <label className={`flex items-center space-x-2 p-2 rounded-lg border cursor-pointer transition-colors ${
+              isLight ? "bg-white border-neutral-200" : "bg-neutral-900 border-neutral-800"
+            }`}>
               <input
                 type="checkbox"
                 checked={config.triggerOnMovement}
                 onChange={(e) => onUpdateConfig({ triggerOnMovement: e.target.checked })}
-                className="rounded border-slate-400 text-cyan-600 focus:ring-cyan-500"
+                className="rounded text-neutral-900 focus:ring-neutral-400 accent-neutral-800"
               />
-              <span className="font-medium">Motion Activity</span>
+              <span className="font-medium text-[11px]">Motion Activity</span>
             </label>
           </div>
         </div>
       </div>
 
-      {/* Alert Sound Controls */}
-      <div className={`rounded-2xl border p-4 space-y-3.5 text-xs ${subCardBg}`}>
-        <div className="flex items-center justify-between border-b pb-2.5 border-slate-200 dark:border-slate-800">
-          <div className="flex items-center space-x-2 font-bold">
-            <Volume2 className="h-4 w-4 text-indigo-500" />
-            <span>Alert Sound Options</span>
+      {/* Audio Alerts Card */}
+      <div className={`rounded-xl p-4 space-y-3.5 text-xs ${sectionBg}`}>
+        <div className="flex items-center justify-between border-b pb-2.5 border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center space-x-2 font-semibold">
+            <Bell className="h-3.5 w-3.5 text-neutral-500" />
+            <span>Audio Notifications</span>
           </div>
 
           <button
             onClick={onTestSound}
-            className="rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 hover:bg-indigo-500/20 transition-colors"
+            className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors border ${
+              isLight
+                ? "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100"
+                : "border-neutral-700 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+            }`}
           >
-            Play Test Tone
+            Play Chime
           </button>
         </div>
 
-        {/* Tone Select */}
+        {/* Tone select */}
         <div>
-          <label className="font-medium">Alarm Tone</label>
+          <label className="font-medium text-neutral-600 dark:text-neutral-400 block mb-1.5">
+            Chime Sound
+          </label>
           <select
             value={config.soundType}
             onChange={(e) => onUpdateConfig({ soundType: e.target.value as SoundType })}
-            className={`mt-1.5 w-full rounded-xl border p-2.5 focus:border-cyan-500 focus:outline-none ${
-              isLight ? "border-slate-300 bg-white text-slate-800" : "border-slate-800 bg-slate-900 text-slate-200"
+            className={`w-full rounded-lg border p-2 text-xs focus:outline-none transition-colors ${
+              isLight
+                ? "border-neutral-200 bg-white text-neutral-800"
+                : "border-neutral-800 bg-neutral-900 text-neutral-200"
             }`}
           >
-            <option value="sonar_ping">Futuristic Sonar Ping</option>
-            <option value="alert_chime">Two-Tone Warning Chime</option>
-            <option value="warning_beep">Rapid Security Beep</option>
-            <option value="pulse_alarm">Cyber Pulse Alarm</option>
+            <option value="sonar_ping">Sonar Ping (Modern)</option>
+            <option value="alert_chime">Two-Tone Chime (Soft)</option>
+            <option value="warning_beep">Security Beep (Crisp)</option>
+            <option value="pulse_alarm">Discrete Pulse (Subtle)</option>
           </select>
         </div>
 
-        {/* Volume Slider */}
+        {/* Volume slider */}
         <div>
-          <div className="flex items-center justify-between">
-            <label className="font-medium">Alarm Volume</label>
-            <span className="font-mono text-indigo-500 font-bold">{Math.round(config.alertVolume * 100)}%</span>
+          <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
+            <label className="font-medium">Chime Volume</label>
+            <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+              {Math.round(config.alertVolume * 100)}%
+            </span>
           </div>
           <input
             type="range"
@@ -341,25 +273,28 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             step={0.05}
             value={config.alertVolume}
             onChange={(e) => onUpdateConfig({ alertVolume: Number(e.target.value) })}
-            className="mt-1.5 w-full accent-indigo-500 h-1.5 rounded-lg cursor-pointer bg-slate-300 dark:bg-slate-800"
+            className="mt-2 w-full accent-neutral-800 dark:accent-neutral-200 h-1 rounded-lg cursor-pointer bg-neutral-200 dark:bg-neutral-800"
           />
         </div>
 
-        {/* Sound Enable Toggle */}
-        <div className="pt-1 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
-          <span className="text-slate-500 dark:text-slate-400">Audio Alerts</span>
+        {/* Audio Mute switch */}
+        <div className="pt-2 flex items-center justify-between border-t border-neutral-200 dark:border-neutral-800">
+          <span className="text-neutral-600 dark:text-neutral-400 font-medium">
+            Alert Sounds
+          </span>
           <button
             onClick={() => onUpdateConfig({ alertSoundEnabled: !config.alertSoundEnabled })}
-            className={`flex items-center space-x-1.5 rounded-xl px-3 py-1.5 font-bold transition-all ${
+            className={`rounded-lg px-3 py-1 font-medium text-xs transition-colors border ${
               config.alertSoundEnabled
-                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30"
+                ? isLight
+                  ? "border-neutral-900 bg-neutral-900 text-white"
+                  : "border-neutral-100 bg-neutral-100 text-neutral-900"
                 : isLight
-                ? "border border-slate-300 bg-slate-100 text-slate-500"
-                : "border border-slate-800 bg-slate-900 text-slate-500"
+                ? "border-neutral-200 bg-neutral-100 text-neutral-500"
+                : "border-neutral-800 bg-neutral-800 text-neutral-400"
             }`}
           >
-            {config.alertSoundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
-            <span>{config.alertSoundEnabled ? "Alert Sound ON" : "Sound Muted"}</span>
+            {config.alertSoundEnabled ? "Enabled" : "Muted"}
           </button>
         </div>
       </div>

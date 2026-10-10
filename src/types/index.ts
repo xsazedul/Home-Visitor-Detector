@@ -25,7 +25,7 @@ export interface DetectedBox {
   trackId?: string;
 }
 
-export type ThemeMode = "dark" | "light" | "hologram";
+export type ThemeMode = "light" | "dark" | "midnight";
 
 export interface MonitoringConfig {
   sensitivity: MotionSensitivity;
